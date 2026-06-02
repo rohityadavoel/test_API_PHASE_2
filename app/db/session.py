@@ -1,7 +1,18 @@
+"""
+Database session setup using asyncpg.
+"""
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from app.core.config import settings
+from typing import AsyncGenerator
 
-engine = create_async_engine(settings.DATABASE_URL, echo=True)
+# Create the async engine
+engine = create_async_engine(
+    settings.DATABASE_URL,
+    echo=False,  # Set to True for SQL query logging
+    future=True,
+)
+
+# Create an async session factory
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
     class_=AsyncSession,
@@ -10,6 +21,9 @@ AsyncSessionLocal = async_sessionmaker(
     autoflush=False,
 )
 
-async def get_db():
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    """
+    Dependency to yield an async database session and ensure it is closed after the request.
+    """
     async with AsyncSessionLocal() as session:
         yield session

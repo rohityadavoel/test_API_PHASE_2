@@ -3,8 +3,12 @@ uvicorn[standard]
 sqlalchemy[asyncio]
 asyncpg
 alembic
+pydantic[email]
 pydantic-settings
 python-jose[cryptography]
+bcrypt
 passlib[bcrypt]
-pytest
+python-multipart
 httpx
+pytest
+pytest-asyncio

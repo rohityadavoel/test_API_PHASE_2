@@ -1,8 +1,14 @@
+"""
+Configuration module to load settings from .env file using pydantic-settings.
+"""
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost:5432/dbname"
-    SECRET_KEY: str = "secret"
+    """
+    Application settings, loaded from environment variables and .env file.
+    """
+    DATABASE_URL: str
+    SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 

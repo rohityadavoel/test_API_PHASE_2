@@ -1,36 +1,30 @@
-import uuid
-from datetime import datetime
+"""
+Consultation schemas.
+"""
 from pydantic import BaseModel
-from typing import Optional
-from app.models.consultation import StatusEnum
+from uuid import UUID
+from datetime import datetime
+from typing import Optional, Literal
 
-class ConsultationCreate(BaseModel):
-    consultant_id: uuid.UUID
+class ConsultationBase(BaseModel):
+    """Base fields for Consultation."""
     scheduled_at: datetime
-    duration_minutes: int
     notes: Optional[str] = None
+
+class ConsultationCreate(ConsultationBase):
+    """Schema for creating a consultation."""
+    consultant_id: UUID
 
 class ConsultationUpdate(BaseModel):
-    scheduled_at: Optional[datetime] = None
-    duration_minutes: Optional[int] = None
+    """Schema for updating a consultation status."""
+    status: Literal["pending", "confirmed", "completed", "cancelled"]
     notes: Optional[str] = None
-    status: Optional[StatusEnum] = None
 
-class ConsultationResponse(BaseModel):
-    id: uuid.UUID
-    client_id: uuid.UUID
-    consultant_id: uuid.UUID
-    scheduled_at: datetime
-    duration_minutes: int
-    status: StatusEnum
-    notes: Optional[str] = None
-    created_at: datetime
+class ConsultationRead(ConsultationBase):
+    """Schema for returning consultation data."""
+    id: UUID
+    client_id: UUID
+    consultant_id: UUID
+    status: Literal["pending", "confirmed", "completed", "cancelled"]
 
-    class Config:
-        from_attributes = True
-
-class ConsultationFilter(BaseModel):
-    status: Optional[StatusEnum] = None
-    consultant_id: Optional[uuid.UUID] = None
-    from_date: Optional[datetime] = None
-    to_date: Optional[datetime] = None
+    model_config = {"from_attributes": True}
